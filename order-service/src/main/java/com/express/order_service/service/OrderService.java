@@ -76,9 +76,11 @@ public class OrderService {
 
                 //Save order
                 orderRepository.save(order);
-            }
 
-            else
+                //Notify Picking Service
+                notifyPickingService(order);
+
+            } else
                 throw new IllegalArgumentException("Product is not in stock!!");
         }catch (WebClientException exception){
             log.error("Error occured while checking inventory: " + exception.getMessage());
@@ -88,6 +90,23 @@ public class OrderService {
             throw new RuntimeException("Error occured while placing  order", e);
         }
 
+    }
+
+
+    private void notifyPickingService(Order order){
+        try{
+            webClient.post()
+                    .uri("http://localhost:8085/api/picking/create")
+                    .bodyValue(order)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
+
+            log.info("Order sent to Picking service successfully");
+        }catch (WebClientException e){
+            log.error("Failed to send to picking service", e.getMessage());
+            throw new RuntimeException("Failed to notify Picking service",e);
+        }
     }
 
     private List<OrderLineItems> mapOrderLineItems(OrderRequest orderRequest) {
@@ -108,4 +127,10 @@ public class OrderService {
         return orderLineItems;
     }
 
+
+    public Order getOrder(String orderNumber){
+        Order order = orderRepository.findByOrderNumber(orderNumber)
+                .orElseThrow(()-> new RuntimeException("No order found with order number"));
+        return order;
+    }
 }

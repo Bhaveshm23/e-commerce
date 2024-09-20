@@ -22,7 +22,7 @@ public class InventoryServiceApplication {
 		return args -> {
 			Inventory inventory = new Inventory();
 			inventory.setSkuCode("AirPods");
-			inventory.setQuantity(2);
+			inventory.setQuantity(200);
 
 			Inventory inventory1 = new Inventory();
 			inventory1.setSkuCode("Baxter Milk 3.25%");
