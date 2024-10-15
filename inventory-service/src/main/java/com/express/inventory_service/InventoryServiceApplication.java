@@ -25,7 +25,7 @@ public class InventoryServiceApplication {
 			inventory.setQuantity(200);
 
 			Inventory inventory1 = new Inventory();
-			inventory1.setSkuCode("Baxter Milk 3.25%");
+			inventory1.setSkuCode("BaxterMilk-3.25");
 			inventory1.setQuantity(0);
 
 			inventoryRepository.save(inventory);

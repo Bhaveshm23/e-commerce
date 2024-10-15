@@ -28,6 +28,7 @@ public class InventoryService {
     public void reduceStock(List<InventoryRequest> inventoryRequests) {
         List<Inventory> inventories = new ArrayList<>();
 
+
         for (InventoryRequest request : inventoryRequests) {
             Inventory inventory = inventoryRepository.findBySkuCode(request.getSkuCode())
                     .orElseThrow(() -> new IllegalArgumentException("SKU code not found: " + request.getSkuCode()));
@@ -37,6 +38,8 @@ public class InventoryService {
 
             if (inventoryQuantity == 0) {
                 log.info("Out of stock for SKU: {}", request.getSkuCode());
+            } else if(request.getQuantity() < 0) {
+                throw new IllegalArgumentException("Quantity must be non-negative for SKU: " + request.getSkuCode());
             } else if (requestedQuantity <= inventoryQuantity) {
                 int updatedQuantity = inventoryQuantity - requestedQuantity;
                 inventory.setQuantity(updatedQuantity);
@@ -46,7 +49,8 @@ public class InventoryService {
                 log.info("Insufficient stock for SKU: {}. Requested: {}, Available: {}", request.getSkuCode(), requestedQuantity, inventoryQuantity);
             }
         }
-
-        inventoryRepository.saveAll(inventories);
+        if(!inventories.isEmpty()){
+            inventoryRepository.saveAll(inventories);
+        }
     }
 }

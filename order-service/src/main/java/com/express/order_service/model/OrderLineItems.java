@@ -23,5 +23,9 @@ public class OrderLineItems {
     private BigDecimal price;
     private int quantity;
 
-
+    @Override
+    public String toString() {
+        return String.format("OrderLineItemsDto{id=%d, skuCode='%s', price=%s, quantity=%d}",
+                id, skuCode, price, quantity);
+    }
 }

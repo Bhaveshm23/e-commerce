@@ -12,4 +12,11 @@ import java.util.List;
 @Setter
 public class OrderRequest {
     private List<OrderLineItemsDto> orderLineItemsDtoList;
+
+    @Override
+    public String toString() {
+        return "OrderRequest{" +
+                "orderLineItemsDtoList=" + orderLineItemsDtoList +
+                '}';
+    }
 }
